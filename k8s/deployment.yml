@@ -13,6 +13,7 @@
        containers:
          - name: training-project
            image: anhegde2/training-project:v1
+           imagePullPolicy: Always
            ports:
            - containerPort: 7000
            envFrom:
@@ -20,3 +21,4 @@
                  name: training-project
              - secretRef:
                  name: training-project-secret
+                 
