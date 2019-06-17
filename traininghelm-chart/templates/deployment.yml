@@ -1,0 +1,38 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ .Values.appname }}
+  labels:
+    app: {{ .Values.appname }}
+    chart: {{ template "traininghelm-chart.name" . }}
+    release: {{ .Release.Name }}
+    releaseversion: {{ .Values.version }}
+    heritage: {{ .Release.Service }}  
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.appname }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appname }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Values.appname }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: training-project
+            - secretRef:
+                name: training-project-secret
+          ports:
+          - containerPort: 7000
+       #    envFrom:
+       #      - configMapRef:
+       #          name: training-project
+       #      - secretRef:
+       #          name: training-project

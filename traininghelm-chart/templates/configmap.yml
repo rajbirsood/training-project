@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+ name: training-project
+data:
+ access_token_url: https://login.uber.com/oauth/token
+ authorize_url: https://login.uber.com/oauth/v2/authorize?response_type=code&client_id=UndlgDFo-x2K3muwcJFuP6fbIbgePNsZ&scope=history+profile&redirect_uri=http://localhost:7000/submit
+ base_url: https://login.uber.com/
+ scopes: profile,history_lite
+ name: MydemoApp
+ base_uber_url: https://api.uber.com/v1/
+ base_uber_url_v1_1 : https://api.uber.com/v1.1/
+ start_latitude: !!integer 37.781955
+ start_longitude: !!integer -122.402367
+ end_latitude: !!integer 37.744352
+ end_longitude: !!integer -122.416743

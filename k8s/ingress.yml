@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: newcastle-perfmon-ingress
+  annotations:
+    ingress.bluemix.net/redirect-to-https: "True"
+    ingress.bluemix.net/add-host-port: "enabled=true serviceName=newcastle-perfmon-service"
+spec:
+  tls:
+  - hosts:
+    - std-cluster2-for-perf-mo.us-south.containers.appdomain.cloud
+    secretName: std-cluster2-for-perf-mo
+  rules:
+  - host: std-cluster2-for-perf-mo.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - path: /cos
+        backend:
+          serviceName: newcastle-perfmon-service
+          servicePort: 9080
+      - path: /airflow
+        backend:
+          serviceName: web
+          servicePort: 8080
+      - path: /
+        backend:
+          serviceName: training-project
+          servicePort: 7000

@@ -24,10 +24,10 @@ def generate_oauth_service():
     return OAuth2Service(
         client_id=os.environ.get('UBER_CLIENT_ID'),
         client_secret=os.environ.get('UBER_CLIENT_SECRET'),
-        name=config.get('name'),
-        authorize_url=config.get('authorize_url'),
-        access_token_url=config.get('access_token_url'),
-        base_url=config.get('base_url'),
+        name=os.environ.get('name'),
+        authorize_url=os.environ.get('authorize_url'),
+        access_token_url=os.environ.get('access_token_url'),
+        base_url=os.environ.get('base_url'),
     )
 
 
@@ -48,13 +48,12 @@ def health():
 @app.route('/', methods=['GET'])
 def signup():
     """The first step in the three-legged OAuth handshake.
-
     You should navigate here first. It will redirect to login.uber.com.
     """
     params = {
         'response_type': 'code',
         'redirect_uri': get_redirect_uri(request),
-        'scopes': ','.join(config.get('scopes')),
+        'scopes': ','.join(os.environ.get('scopes')),
     }
     url = generate_oauth_service().get_authorize_url(**params)
     return redirect(url)
@@ -63,7 +62,6 @@ def signup():
 @app.route('/submit', methods=['GET'])
 def submit():
     """The other two steps in the three-legged Oauth handshake.
-
     Your redirect uri will redirect you here, where you will exchange
     a code that can be used to obtain an access token for the logged-in use.
     """
@@ -73,7 +71,7 @@ def submit():
         'grant_type': 'authorization_code'
     }
     response = app.requests_session.post(
-        config.get('access_token_url'),
+        os.environ.get('access_token_url'),
         auth=(
             os.environ.get('UBER_CLIENT_ID'),
             os.environ.get('UBER_CLIENT_SECRET')
@@ -97,13 +95,12 @@ def demo():
 @app.route('/products', methods=['GET'])
 def products():
     """Example call to the products endpoint.
-
     Returns all the products currently available in San Francisco.
     """
-    url = config.get('base_uber_url') + 'products'
+    url = os.environ.get('base_uber_url') + 'products'
     params = {
-        'latitude': config.get('start_latitude'),
-        'longitude': config.get('start_longitude'),
+        'latitude': os.environ.get('start_latitude'),
+        'longitude': os.environ.get('start_longitude'),
     }
 
     response = app.requests_session.get(
@@ -124,13 +121,12 @@ def products():
 @app.route('/time', methods=['GET'])
 def time():
     """Example call to the time estimates endpoint.
-
     Returns the time estimates from the given lat/lng given below.
     """
-    url = config.get('base_uber_url') + 'estimates/time'
+    url = os.environ.get('base_uber_url') + 'estimates/time'
     params = {
-        'start_latitude': config.get('start_latitude'),
-        'start_longitude': config.get('start_longitude'),
+        'start_latitude': os.environ.get('start_latitude'),
+        'start_longitude': os.environ.get('start_longitude'),
     }
 
     response = app.requests_session.get(
@@ -151,15 +147,14 @@ def time():
 @app.route('/price', methods=['GET'])
 def price():
     """Example call to the price estimates endpoint.
-
     Returns the time estimates from the given lat/lng given below.
     """
-    url = config.get('base_uber_url') + 'estimates/price'
+    url = os.environ.get('base_uber_url') + 'estimates/price'
     params = {
-        'start_latitude': config.get('start_latitude'),
-        'start_longitude': config.get('start_longitude'),
-        'end_latitude': config.get('end_latitude'),
-        'end_longitude': config.get('end_longitude'),
+        'start_latitude': os.environ.get('start_latitude'),
+        'start_longitude': os.environ.get('start_longitude'),
+        'end_latitude': os.environ.get('end_latitude'),
+        'end_longitude': os.environ.get('end_longitude'),
     }
 
     response = app.requests_session.get(
@@ -180,7 +175,7 @@ def price():
 @app.route('/history', methods=['GET'])
 def history():
     """Return the last 5 trips made by the logged in user."""
-    url = config.get('base_uber_url_v1_1') + 'history'
+    url = os.environ.get('base_uber_url_v1_1') + 'history'
     params = {
         'offset': 0,
         'limit': 5,
@@ -204,7 +199,7 @@ def history():
 @app.route('/me', methods=['GET'])
 def me():
     """Return user information including name, picture and email."""
-    url = config.get('base_uber_url') + 'me'
+    url = os.environ.get('base_uber_url') + 'me'
     response = app.requests_session.get(
         url,
         headers=generate_ride_headers(session.get('access_token')),
