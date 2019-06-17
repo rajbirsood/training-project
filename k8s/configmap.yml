@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
- name: training-project
+ name: training-project-configmap
 data:
  access_token_url: https://login.uber.com/oauth/token
  authorize_url: https://login.uber.com/oauth/v2/authorize?response_type=code&client_id=UndlgDFo-x2K3muwcJFuP6fbIbgePNsZ&scope=history+profile&redirect_uri=http://localhost:7000/submit

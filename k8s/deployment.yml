@@ -1,4 +1,3 @@
----
  apiVersion: extensions/v1beta1
  kind: Deployment
  metadata:
@@ -20,4 +19,4 @@
              - configMapRef:
                  name: training-project
              - secretRef:
-                 name: training-project
+                 name: training-project-secret
